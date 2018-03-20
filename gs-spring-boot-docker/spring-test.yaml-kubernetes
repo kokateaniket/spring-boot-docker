@@ -1,0 +1,46 @@
+{
+  "kind": "Service",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "spring-test-api",
+    "namespace": "default",
+    "selfLink": "/api/v1/namespaces/default/services/spring-test-api",
+    "uid": "20e93265-26b2-11e8-b4bf-0e390dd7dc2e",
+    "resourceVersion": "191928",
+    "creationTimestamp": "2018-03-13T11:31:53Z",
+    "labels": {
+      "app": "spring-test"
+    }
+  },
+  "spec": {
+    "ports": [
+      {
+        "name": "http",
+        "protocol": "TCP",
+        "port": 8080,
+        "targetPort": 8080,
+        "nodePort": 30090
+      }
+    ],
+    "selector": {
+      "app": "spring-test",
+      "tier": "compute"
+    },
+    "clusterIP": "10.152.183.72",
+    "type": "LoadBalancer",
+    "sessionAffinity": "None",
+    "loadBalancerSourceRanges": [
+      "0.0.0.0/0"
+    ],
+    "externalTrafficPolicy": "Cluster"
+  },
+  "status": {
+    "loadBalancer": {
+      "ingress": [
+        {
+          "hostname": "a20e9326526b211e8b4bf0e390dd7dc2-670860221.us-east-1.elb.amazonaws.com"
+        }
+      ]
+    }
+  }
+}

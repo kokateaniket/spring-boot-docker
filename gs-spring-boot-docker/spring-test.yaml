@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-test-api
+  labels:
+    app: spring-test
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+      name: http
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30090
+  selector:
+    app: spring-test
+    tier: compute
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: spring-test-api
+  labels:
+    app: spring-test
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: spring-test
+        tier: compute
+    spec:
+      containers:
+        - image: kokateaniket/springtest:latest
+          imagePullPolicy: Always
+          name: spring-test
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: demo-credentials
+                  key: serverport
+
+          ports:
+            - containerPort: 8080
+              name: web

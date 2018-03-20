@@ -1,0 +1,47 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-test-api
+  labels:
+    app: spring-test
+spec:
+  type: NodePort
+  ports:
+    - port: 9005
+      protocol: TCP
+      targetPort: 9005
+      nodePort: 30090
+  selector:
+    app: spring-test
+    tier: compute
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: spring-test-api
+  labels:
+    app: spring-test
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: spring-test
+        tier: compute
+    spec:
+      containers:
+        - image: kokateaniket/springtest:latest
+          imagePullPolicy: Always
+          name: spring-test
+          env:
+            - name: SERVER_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: demo-credentials
+                  key: serverport
+
+          ports:
+            - containerPort: 9005
+              name: web
